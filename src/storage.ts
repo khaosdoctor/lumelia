@@ -1,4 +1,4 @@
-import { FileAdapter } from 'https://deno.land/x/grammy_storages@v2.3.0/file/src/mod.ts'
+import { FileAdapter } from './deps.ts'
 import type { Config } from './config.ts'
 import { type ISession, MongoClient, MongoDBAdapter } from './deps.ts'
 import type { BotSession } from './bot.ts'

@@ -1,0 +1,13 @@
+{
+	"fmt": {
+		"options": {
+			"semiColons": false,
+			"singleQuote": true,
+			"useTabs": true
+		}
+	},
+	"tasks": {
+		"dev": "deno run --watch -A ./src/dev.ts"
+	},
+	"lock": true
+}

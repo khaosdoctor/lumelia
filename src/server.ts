@@ -13,6 +13,6 @@ router.post('/set-webhook', async (ctx) => {
 	ctx.response.status = 201
 })
 
-app.use(webhookCallback(bot, 'oak'))
+app.use(webhookCallback(bot, 'oak', { secretToken: config.TELEGRAM_BOT_API_SECRET_TOKEN }))
 app.use(router.routes())
 app.listen({ port: config.PORT })

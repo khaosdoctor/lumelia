@@ -7,7 +7,7 @@ export const ConfigSchema = z.object({
 	DATABASE_CONNSTRING: z.string(),
 	PORT: z.number().default(3000),
 	BOT_WEBHOOK_URL: z.string().url(),
-	DEV_MODE: z.number().optional().default(1).transform((v) => Boolean(v)),
+	DEV_MODE: z.string().optional().default("1").transform((v) => Boolean(Number(v))),
 })
 export type Config = z.infer<typeof ConfigSchema>
 

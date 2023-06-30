@@ -1,5 +1,6 @@
 import { botCommands } from './commands/index.ts'
 import { config } from './config.ts'
+import { BalanceObject } from "./core/Balance.ts"
 import { HuntSession } from './core/parseHuntSession.ts'
 import { Transaction } from "./core/splitLoot.ts"
 import { Bot, Context, session, SessionFlavor } from './deps.ts'
@@ -7,25 +8,23 @@ import { balancePaidHandler } from "./handlers/balancePaid.ts"
 import { clearBalanceHandler } from './handlers/clearBalance.ts'
 import { getStorageAdapter } from './storage.ts'
 
+// Aliases to make things easier to read
+export type CharName = string & { __brand: 'CHAR' }
+export type PlayerId = string & { __brand: 'PLAYER' }
+
 export interface TelegramUser {
   name: string
-  userId: number
+  userId: PlayerId
 }
 
-export interface Balance {
-  from: TelegramUser
-  to: TelegramUser
-  amount: number
-  paid: boolean
-  transactions: Transaction[]
-}
+export type MaybePlayer = TelegramUser | CharName
 
 export interface BotSession {
-  charsToPlayers: Record<string, TelegramUser>
-  playersToChars: Record<string, string[]>
-  balances: Record<string, Balance[]>
-  huntSessions: Record<string, HuntSession>
-  transactions: Record<string, Transaction>
+  charsToPlayers: Record<CharName, TelegramUser>
+  playersToChars: Record<PlayerId, string[]>
+  balances: Record<PlayerId | CharName, Record<PlayerId | CharName, BalanceObject>>
+  huntSessions: Record<HuntSession['sessionId'], HuntSession>
+  transactions: Record<Transaction['transactionId'], Transaction>
 }
 export type BotContext = Context & SessionFlavor<BotSession>
 

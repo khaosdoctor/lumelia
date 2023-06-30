@@ -1,4 +1,4 @@
-import type { HuntSession } from './parse-loot.ts'
+import type { HuntSession } from './parseHuntSession.ts'
 
 export interface Transaction {
 	sessionId: string
@@ -39,7 +39,7 @@ export const splitLoot = ({
 			sessionId,
 			from: state[state.length - 1].name,
 			to: state[0].name,
-			amount,
+			amount
 		})
 
 		state.sort((a, b) => a.balance - b.balance)

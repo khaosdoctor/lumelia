@@ -1,5 +1,4 @@
 import type {
-	BotContext,
 	BotSession,
 	CharName,
 	MaybePlayer,

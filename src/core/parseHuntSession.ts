@@ -25,7 +25,7 @@ const parseLootType = (line: string): string => {
 
 const generateSessionHash = async (text: string) => {
 	const textBytes = new TextEncoder().encode(text)
-	return toHashString(await crypto.subtle.digest('SHA-256', textBytes), 'hex').substring(0, 12)
+	return toHashString(await crypto.subtle.digest('SHA-256', textBytes), 'hex').substring(0, 24)
 }
 
 const parsePlayer = ([name, loot, supplies, balance, damage, healing]: string[]) => ({

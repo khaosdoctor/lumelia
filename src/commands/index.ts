@@ -4,6 +4,7 @@ import { CommandMiddleware } from 'https://deno.land/x/grammy@v1.10.1/mod.ts'
 import { iamCommand } from './iam.ts'
 import { listBalancesCommand } from './balances.ts'
 import { clearBalanceCommand } from './clearBalance.ts'
+import { splitLootCommand } from './splitLoot.ts'
 
 export const botCommands:
 	(BotCommand & { handler: CommandMiddleware<BotContext> })[] = [
@@ -30,6 +31,6 @@ export const botCommands:
 		{
 			command: 'splitloot',
 			description: 'Splits the session loot evenly and adds it to the balances',
-			handler: listBalancesCommand,
+			handler: splitLootCommand,
 		},
 	]

@@ -21,7 +21,7 @@ export type MaybePlayer = TelegramUser | CharName
 
 export interface BotSession {
   charsToPlayers: Record<CharName, TelegramUser>
-  playersToChars: Record<PlayerId, string[]>
+  playersToChars: Record<PlayerId, CharName[]>
   balances: Record<PlayerId | CharName, Record<PlayerId | CharName, BalanceObject>>
   huntSessions: Record<HuntSession['sessionId'], HuntSession>
   transactions: Record<Transaction['transactionId'], Transaction>

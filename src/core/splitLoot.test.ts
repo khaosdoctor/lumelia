@@ -3,9 +3,9 @@ import { parseLoot } from './parse-loot'
 import { splitLoot } from './split-loot'
 // TODO: fix tests to use Deno test
 describe.concurrent('splitLoot', (it) => {
-    it('should split loot evenly', ({ expect }) => {
-        const input =
-            `Session data: From 2023-06-04, 19:10:01 to 2023-06-04, 20:15:31
+	it('should split loot evenly', ({ expect }) => {
+		const input =
+			`Session data: From 2023-06-04, 19:10:01 to 2023-06-04, 20:15:31
       Session: 01:05h
       Loot Type: Leader
       Loot: 3,061,755
@@ -25,16 +25,16 @@ describe.concurrent('splitLoot', (it) => {
           Healing: 1,391,731
       `
 
-        const loot = parseLoot(input)
+		const loot = parseLoot(input)
 
-        expect(splitLoot(loot)).toEqual([
-            { from: 'Drexi', to: 'Swampy Gas', amount: 1074661 },
-        ])
-    })
+		expect(splitLoot(loot)).toEqual([
+			{ from: 'Drexi', to: 'Swampy Gas', amount: 1074661 },
+		])
+	})
 
-    it('should split loot for more than two players', ({ expect }) => {
-        const input =
-            `Session data: From 2023-05-30, 19:45:04 to 2023-05-30, 20:52:15
+	it('should split loot for more than two players', ({ expect }) => {
+		const input =
+			`Session data: From 2023-05-30, 19:45:04 to 2023-05-30, 20:52:15
       Session: 01:07h
       Loot Type: Leader
       Loot: 952,548
@@ -60,17 +60,17 @@ describe.concurrent('splitLoot', (it) => {
           Healing: 945,679
       `
 
-        const loot = parseLoot(input)
+		const loot = parseLoot(input)
 
-        expect(splitLoot(loot)).toEqual([
-            { from: 'Knight Orion', to: 'Raagendazss', amount: 394064 },
-            { from: 'Knight Orion', to: 'Mistee Shadowforge', amount: 265295 },
-        ])
-    })
+		expect(splitLoot(loot)).toEqual([
+			{ from: 'Knight Orion', to: 'Raagendazss', amount: 394064 },
+			{ from: 'Knight Orion', to: 'Mistee Shadowforge', amount: 265295 },
+		])
+	})
 
-    it('should split loot when two players have to transfer', ({ expect }) => {
-        const input =
-            `Session data: From 2023-06-04, 12:28:53 to 2023-06-04, 14:36:56
+	it('should split loot when two players have to transfer', ({ expect }) => {
+		const input =
+			`Session data: From 2023-06-04, 12:28:53 to 2023-06-04, 14:36:56
       Session: 02:08h
       Loot Type: Leader
       Loot: 11,704,202
@@ -102,18 +102,18 @@ describe.concurrent('splitLoot', (it) => {
           Healing: 4,333,825
       `
 
-        const loot = parseLoot(input)
+		const loot = parseLoot(input)
 
-        expect(splitLoot(loot)).toEqual([
-            { from: 'Drexi', to: 'Acelime', amount: 3008704 },
-            { from: 'Drexi', to: 'Swampy Gas', amount: 1719648 },
-            { from: 'Bezdech', to: 'Swampy Gas', amount: 780796 },
-        ])
-    })
+		expect(splitLoot(loot)).toEqual([
+			{ from: 'Drexi', to: 'Acelime', amount: 3008704 },
+			{ from: 'Drexi', to: 'Swampy Gas', amount: 1719648 },
+			{ from: 'Bezdech', to: 'Swampy Gas', amount: 780796 },
+		])
+	})
 
-    it('should split loot with a negative balance', ({ expect }) => {
-        const input =
-            `Session data: From 2023-06-05, 18:17:05 to 2023-06-05, 19:16:01
+	it('should split loot with a negative balance', ({ expect }) => {
+		const input =
+			`Session data: From 2023-06-05, 18:17:05 to 2023-06-05, 19:16:01
       Session: 00:58h
       Loot Type: Market
       Loot: 358,549
@@ -139,11 +139,11 @@ describe.concurrent('splitLoot', (it) => {
           Healing: 207,184
       `
 
-        const loot = parseLoot(input)
+		const loot = parseLoot(input)
 
-        expect(splitLoot(loot)).toEqual([
-            { from: 'Killer Hick', to: 'Dangerous Fred', amount: 188652 },
-            { from: 'Killer Hick', to: 'Yutha Ed', amount: 135228 },
-        ])
-    })
+		expect(splitLoot(loot)).toEqual([
+			{ from: 'Killer Hick', to: 'Dangerous Fred', amount: 188652 },
+			{ from: 'Killer Hick', to: 'Yutha Ed', amount: 135228 },
+		])
+	})
 })

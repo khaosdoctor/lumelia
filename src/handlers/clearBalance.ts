@@ -14,7 +14,9 @@ export async function clearBalanceHandler(
 		await ctx.answerCallbackQuery('Clearing balances...')
 		ctx.session.balances = {}
 		await ctx.editMessageText(
-			`💸 Balances cleared by ${makeUserLink(userObjectFromMessage(ctx))} on ${new Date().toLocaleString('en-US')}`,
+			`💸 Balances cleared by ${makeUserLink(userObjectFromMessage(ctx))} on ${
+				new Date().toLocaleString('en-US')
+			}`,
 			{ parse_mode: 'MarkdownV2' },
 		)
 	}

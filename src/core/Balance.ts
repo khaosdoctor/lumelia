@@ -78,6 +78,18 @@ export class Balance {
     this.#transactions = []
   }
 
+  pay (amount: number) {
+    this.#amount -= amount
+    this.history.push({
+      amountPaid: amount,
+      date: new Date(),
+      transactions: []
+    })
+    if (this.#amount <= 0) {
+      this.markAsPaid()
+    }
+  }
+
   toObject (): BalanceObject {
     return {
       id: this.id,

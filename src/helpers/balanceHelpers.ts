@@ -6,8 +6,6 @@ export function getAllBalanceTexts(session: BotSession) {
 }
 
 export function getAllBalances(session: BotSession) {
-	const balances = Object.values(session.balances).map((playerBalances) =>
-		Object.values(playerBalances)
-	)
+	const balances = Object.values(session.balances).map((playerBalances) => Object.values(playerBalances))
 	return balances.flat().map((balance) => Balance.createFrom(balance))
 }

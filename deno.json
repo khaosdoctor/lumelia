@@ -3,7 +3,8 @@
 		"options": {
 			"semiColons": false,
 			"singleQuote": true,
-			"useTabs": true
+			"useTabs": true,
+			"lineWidth": 120
 		}
 	},
 	"tasks": {

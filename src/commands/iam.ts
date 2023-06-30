@@ -16,9 +16,7 @@ export async function iamCommand(ctx: CommandContext<BotContext>) {
 	const player = ctx.session.charsToPlayers[toCharName(characterName)]
 	if (player) {
 		await ctx.reply(
-			`Character *${characterName}* is already associated with *${
-				makeUserLink(player)
-			}*, I cannot overwrite`,
+			`Character *${characterName}* is already associated with *${makeUserLink(player)}*, I cannot overwrite`,
 			{ reply_to_message_id: ctx.message.message_id, parse_mode: 'MarkdownV2' },
 		)
 		return
@@ -48,8 +46,7 @@ export async function iamCommand(ctx: CommandContext<BotContext>) {
 	for (const playerName of Object.keys(ctx.session.balances)) {
 		if (playerName === characterName) {
 			// if it's their own balance, just copy the balance to the new ID and delete the previous one
-			ctx.session.balances[telegramUser.userId] =
-				ctx.session.balances[toCharName(playerName)]
+			ctx.session.balances[telegramUser.userId] = ctx.session.balances[toCharName(playerName)]
 			delete ctx.session.balances[toCharName(playerName)]
 			const playerBalances = ctx.session.balances[telegramUser.userId]
 
@@ -73,9 +70,8 @@ export async function iamCommand(ctx: CommandContext<BotContext>) {
 		for (const involvedPlayerName of involvedPlayers) {
 			if (involvedPlayerName === characterName) {
 				// if it's a balance they're involved in, update the player name on the key and delete the previous one
-				ctx.session.balances[toCharName(playerName)][telegramUser.userId] =
-					ctx.session
-						.balances[toCharName(playerName)][toCharName(involvedPlayerName)]
+				ctx.session.balances[toCharName(playerName)][telegramUser.userId] = ctx.session
+					.balances[toCharName(playerName)][toCharName(involvedPlayerName)]
 				delete ctx.session
 					.balances[toCharName(playerName)][toCharName(involvedPlayerName)]
 
@@ -84,20 +80,15 @@ export async function iamCommand(ctx: CommandContext<BotContext>) {
 					ctx.session.balances[toCharName(playerName)][telegramUser.userId],
 				)
 				involvedPlayerBalance.to = telegramUser
-				ctx.session.balances[toCharName(playerName)][telegramUser.userId] =
-					involvedPlayerBalance.toObject()
+				ctx.session.balances[toCharName(playerName)][telegramUser.userId] = involvedPlayerBalance.toObject()
 			}
 		}
 	}
 
 	console.info(
-		`This is my character to player mapping: ${
-			JSON.stringify(ctx.session.charsToPlayers, null, 2)
-		}`,
+		`This is my character to player mapping: ${JSON.stringify(ctx.session.charsToPlayers, null, 2)}`,
 	)
 	console.info(
-		`This is my player to char mapping: ${
-			JSON.stringify(ctx.session.playersToChars, null, 2)
-		}`,
+		`This is my player to char mapping: ${JSON.stringify(ctx.session.playersToChars, null, 2)}`,
 	)
 }

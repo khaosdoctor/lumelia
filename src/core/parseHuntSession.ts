@@ -45,10 +45,9 @@ const parsePlayer = (
 })
 
 export const parseHuntSession = async (text: string) => {
-	const [sessionHeader, duration, lootType, loot, supplies, balance, ...lines] =
-		text
-			.trim()
-			.split('\n')
+	const [sessionHeader, duration, lootType, loot, supplies, balance, ...lines] = text
+		.trim()
+		.split('\n')
 
 	if (!lootType || !lootType.trim().startsWith('Loot Type:')) {
 		throw new Error('Invalid input')

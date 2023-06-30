@@ -124,10 +124,8 @@ export class Balance {
 	}
 
 	toString() {
-		return `\n👉 *${makeUserLink(this.from)} ${
-			this.#formatFromToCharName('from')
-		}* owes *${makeUserLink(this.to)} ${this.#formatFromToCharName('to')}* _${
-			Intl.NumberFormat().format(this.#amount)
-		}_:\n\t\t💬: _transfer ${this.#amount} to ${this.toChar}_`
+		return `\n👉 *${makeUserLink(this.from)} ${this.#formatFromToCharName('from')}* owes *${makeUserLink(this.to)} ${
+			this.#formatFromToCharName('to')
+		}* _${Intl.NumberFormat().format(this.#amount)}_:\n\t\t💬: _transfer ${this.#amount} to ${this.toChar}_`
 	}
 }

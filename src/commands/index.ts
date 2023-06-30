@@ -6,31 +6,30 @@ import { listBalancesCommand } from './balances.ts'
 import { clearBalanceCommand } from './clearBalance.ts'
 import { splitLootCommand } from './splitLoot.ts'
 
-export const botCommands:
-	(BotCommand & { handler: CommandMiddleware<BotContext> })[] = [
-		{
-			command: 'ping',
-			description: 'Asserts the bot is working',
-			handler: (ctx: BotContext) => ctx.reply('pong!'),
-		},
-		{
-			command: 'iam',
-			description: 'Registers a user to a character',
-			handler: iamCommand,
-		},
-		{
-			command: 'balances',
-			description: 'Lists all outstanding balances',
-			handler: listBalancesCommand,
-		},
-		{
-			command: 'clearbalance',
-			description: 'Clears all balances from group',
-			handler: clearBalanceCommand,
-		},
-		{
-			command: 'splitloot',
-			description: 'Splits the session loot evenly and adds it to the balances',
-			handler: splitLootCommand,
-		},
-	]
+export const botCommands: (BotCommand & { handler: CommandMiddleware<BotContext> })[] = [
+	{
+		command: 'ping',
+		description: 'Asserts the bot is working',
+		handler: (ctx: BotContext) => ctx.reply('pong!'),
+	},
+	{
+		command: 'iam',
+		description: 'Registers a user to a character',
+		handler: iamCommand,
+	},
+	{
+		command: 'balances',
+		description: 'Lists all outstanding balances',
+		handler: listBalancesCommand,
+	},
+	{
+		command: 'clearbalance',
+		description: 'Clears all balances from group',
+		handler: clearBalanceCommand,
+	},
+	{
+		command: 'splitloot',
+		description: 'Splits the session loot evenly and adds it to the balances',
+		handler: splitLootCommand,
+	},
+]

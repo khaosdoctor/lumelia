@@ -2,11 +2,7 @@ import { BotContext } from '../bot.ts'
 import { Balance } from '../core/Balance.ts'
 import { parseHuntSession } from '../core/parseHuntSession.ts'
 import { splitLoot } from '../core/splitLoot.ts'
-import {
-	findPlayerThatOwnsTheChar,
-	getOutstandingBalance,
-	setPlayerBalance,
-} from '../helpers/playerHelpers.ts'
+import { findPlayerThatOwnsTheChar, getOutstandingBalance, setPlayerBalance } from '../helpers/playerHelpers.ts'
 
 export async function splitLootCommand(ctx: BotContext) {
 	const loadingMessage = await ctx.reply(
@@ -53,8 +49,7 @@ export async function splitLootCommand(ctx: BotContext) {
 			session.transactions[transaction.transactionId] = transaction
 			const maybePlayer = findPlayerThatOwnsTheChar(session, transaction.from)
 			const maybeReceiver = findPlayerThatOwnsTheChar(session, transaction.to)
-			const outstandingBalance =
-				getOutstandingBalance(session, maybePlayer, maybeReceiver) ||
+			const outstandingBalance = getOutstandingBalance(session, maybePlayer, maybeReceiver) ||
 				new Balance(maybePlayer, maybeReceiver)
 			outstandingBalance.addTransaction(transaction)
 			setPlayerBalance(session, outstandingBalance)

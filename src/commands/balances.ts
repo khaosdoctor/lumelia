@@ -5,6 +5,7 @@ import {
 	getAllBalanceTexts,
 } from '../helpers/balanceHelpers.ts'
 import { isPlayerLinkedToAnyChar } from '../helpers/playerHelpers.ts'
+import { userObjectFromMessage } from '../helpers/userObjectFromMessage.ts'
 
 export async function listBalancesCommand(ctx: BotContext) {
 	const balances = getAllBalances(ctx.session)
@@ -15,7 +16,7 @@ export async function listBalancesCommand(ctx: BotContext) {
 	if (balances.length > 0) {
 		balancesText = getAllBalanceTexts(ctx.session).join('\n')
 	}
-	if (isPlayerLinkedToAnyChar(ctx)) {
+	if (isPlayerLinkedToAnyChar(ctx.session, userObjectFromMessage(ctx))) {
 		options.reply_markup = (new InlineKeyboard()).text(
 			'👍 I paid',
 			'balance_paid',

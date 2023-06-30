@@ -24,8 +24,8 @@ export function setPlayerBalance(session: BotSession, balance: Balance) {
 	session.balances[payerKey][receiverKey] = balance.toObject()
 }
 
-export function isPlayerLinkedToAnyChar(context: BotContext) {
-	return context.session.playersToChars[toPlayerId(context.from?.id!)]?.length >
+export function isPlayerLinkedToAnyChar (session: BotSession, player: TelegramUser) {
+  return session.playersToChars[player.userId]?.length >
 		0
 }
 

@@ -1,5 +1,7 @@
 import { BotContext } from '../bot.ts'
 import { Filter } from '../deps.ts'
+import { makeUserLink } from '../helpers/makeUserLink.ts'
+import { userObjectFromMessage } from '../helpers/userObjectFromMessage.ts'
 
 type ClearBalanceResponseTypes = 'Yes' | 'No' | undefined
 
@@ -12,9 +14,7 @@ export async function clearBalanceHandler(
 		await ctx.answerCallbackQuery('Clearing balances...')
 		ctx.session.balances = {}
 		await ctx.editMessageText(
-			`💸 Balances cleared by [${
-				ctx.from.username || ctx.from.first_name
-			}](tg://user?id=${ctx.from.id}) on ${new Date().toLocaleString('en-US')}`,
+			`💸 Balances cleared by ${makeUserLink(userObjectFromMessage(ctx))} on ${new Date().toLocaleString('en-US')}`,
 			{ parse_mode: 'MarkdownV2' },
 		)
 	}

@@ -1,5 +1,6 @@
 import { BotContext, TelegramUser } from '../bot.ts'
 import { CommandContext } from '../deps.ts'
+import { userObjectFromMessage } from '../helpers/userObjectFromMessage.ts'
 
 export async function iamCommand(ctx: CommandContext<BotContext>) {
 	if (!ctx.message?.text || !ctx.message?.from.id) return
@@ -17,11 +18,7 @@ export async function iamCommand(ctx: CommandContext<BotContext>) {
 		)
 	}
 
-	const telegramUser: TelegramUser = {
-		name: ctx.message.from.username || ctx.message.from.first_name,
-		userId: ctx.message.from.id,
-	}
-
+	const telegramUser: TelegramUser = userObjectFromMessage(ctx)
 	ctx.session.charsToPlayers[characterName] = telegramUser
 
 	const playerCharacters = ctx.session.playersToChars[telegramUser.name]

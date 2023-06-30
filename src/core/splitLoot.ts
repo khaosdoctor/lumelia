@@ -1,10 +1,15 @@
+import { CharName } from '../bot.ts'
+import { toCharName } from "../helpers/playerHelpers.ts"
 import type { HuntSession } from './parseHuntSession.ts'
 
 export interface Transaction {
+	transactionId: string
 	sessionId: string
-	from: string
-	to: string
+	from: CharName
+	to: CharName
 	amount: number
+	note?: string
+	timestamp: number
 }
 
 /**
@@ -36,10 +41,13 @@ export const splitLoot = ({
 		state[state.length - 1].balance -= amount
 
 		transactions.push({
+			transactionId: `${sessionId}-${transactions.length}`,
 			sessionId,
-			from: state[state.length - 1].name,
-			to: state[0].name,
-			amount
+			from: toCharName(state[state.length - 1].name),
+			to: toCharName(state[0].name),
+			amount,
+			note: `split loot from session ${sessionId}`,
+			timestamp: Date.now()
 		})
 
 		state.sort((a, b) => a.balance - b.balance)

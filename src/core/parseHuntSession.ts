@@ -1,6 +1,6 @@
 import { generateSnowflakeId } from '../deps.ts'
 
-export type HuntSession = Awaited<ReturnType<typeof parseSessionText>>
+export type HuntSession = Awaited<ReturnType<typeof parseHuntSession>>
 
 const chunk = <T> (inputArray: T[], perChunk: number) => inputArray.reduce((resultArray: Array<T[]>, item, index) => {
 	const chunkIndex = Math.floor(index / perChunk)
@@ -32,12 +32,12 @@ const parsePlayer = ([name, loot, supplies, balance, damage, healing]: string[])
 	healing: parseNumberLine(healing),
 })
 
-export const parseSessionText = (text: string) => {
+export const parseHuntSession = (text: string) => {
 	const [sessionHeader, duration, lootType, loot, supplies, balance, ...lines] = text
 		.trim()
 		.split('\n')
 
-	if (!lootType.trim().startsWith('Loot Type:')) {
+	if (!lootType || !lootType.trim().startsWith('Loot Type:')) {
 		throw new Error('Invalid input')
 	}
 

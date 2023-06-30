@@ -2,7 +2,7 @@ export { generate as generateSnowflakeId } from "https://deno.land/x/deno_snowfl
 export {
 	Bot, InlineKeyboard,
 	session, webhookCallback, type CommandContext,
-	type Context,
+	type Context, type CommandMiddleware,
 	type Filter, type SessionFlavor
 } from 'https://deno.land/x/grammy@v1.10.1/mod.ts'
 export {

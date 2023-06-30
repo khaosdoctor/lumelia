@@ -1,6 +1,6 @@
 import { botCommands } from './commands/index.ts'
 import { config } from './config.ts'
-import { HuntSession } from './core/parseLoot.ts'
+import { HuntSession } from './core/parseHuntSession.ts'
 import { Transaction } from "./core/splitLoot.ts"
 import { Bot, Context, session, SessionFlavor } from './deps.ts'
 import { balancePaidHandler } from "./handlers/balancePaid.ts"
@@ -12,10 +12,18 @@ export interface TelegramUser {
   userId: number
 }
 
+export interface Balance {
+  from: TelegramUser
+  to: TelegramUser
+  amount: number
+  paid: boolean
+  transactions: Transaction[]
+}
+
 export interface BotSession {
   charsToPlayers: Record<string, TelegramUser>
   playersToChars: Record<string, string[]>
-  balances: Record<string, number>
+  balances: Record<string, Balance[]>
   huntSessions: Record<string, HuntSession>
   transactions: Record<string, Transaction>
 }

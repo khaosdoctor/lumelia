@@ -1,4 +1,4 @@
-import type { BotSession, CharName, MaybePlayer, PlayerId, TelegramUser } from "../bot.ts"
+import type { BotContext, BotSession, CharName, MaybePlayer, PlayerId, TelegramUser } from "../bot.ts"
 import { Balance } from "../core/Balance.ts"
 
 export function toPlayerId (id: number): PlayerId {
@@ -15,6 +15,10 @@ export function setPlayerBalance (session: BotSession, balance: Balance) {
 
   if (!session.balances[payerKey]) session.balances[payerKey] = {}
   session.balances[payerKey][receiverKey] = balance.toObject()
+}
+
+export function isPlayerLinkedToAnyChar (context: BotContext) {
+  return context.session.playersToChars[toPlayerId(context.from?.id!)]?.length > 0
 }
 
 export function getOutstandingBalance (session: BotSession, from: MaybePlayer, to: MaybePlayer) {

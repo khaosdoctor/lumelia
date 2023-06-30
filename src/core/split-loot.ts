@@ -1,5 +1,12 @@
-import type { parseLoot } from './parse-loot.ts'
-// TODO: Fix file
+import type { HuntSession } from './parse-loot.ts'
+
+export interface Transaction {
+	sessionId: string
+	from: string
+	to: string
+	amount: number
+}
+
 /**
  * Split loot between players fairly and return a list of transactions.
  *
@@ -11,7 +18,8 @@ import type { parseLoot } from './parse-loot.ts'
 export const splitLoot = ({
 	balance,
 	players,
-}: ReturnType<typeof parseLoot>) => {
+	sessionId,
+}: HuntSession) => {
 	const balancePerPlayer = Math.floor(balance / players.length)
 	const state = players.map(({ name, balance }) => ({
 		name,
@@ -28,6 +36,7 @@ export const splitLoot = ({
 		state[state.length - 1].balance -= amount
 
 		transactions.push({
+			sessionId,
 			from: state[state.length - 1].name,
 			to: state[0].name,
 			amount,

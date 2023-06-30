@@ -1,6 +1,15 @@
+import { generateSnowflakeId } from '../deps.ts'
+
+export type HuntSession = Awaited<ReturnType<typeof parseSessionText>>
+
+const chunk = <T> (inputArray: T[], perChunk: number) => inputArray.reduce((resultArray: Array<T[]>, item, index) => {
+	const chunkIndex = Math.floor(index / perChunk)
+	resultArray[chunkIndex] = ([] as T[]).concat((resultArray[chunkIndex] || []), item)
+	return resultArray
+}, [] as Array<T[]>)
+
 const parseDuration = (line: string): number => {
-	const [, value] = line.split(':')
-	const [hours, minutes] = value.substring(0, value.length - 2).split(':')
+	const [, hours, minutes] = line.replace('h', '').split(':')
 	return Number(hours) * 60 + Number(minutes)
 }
 
@@ -14,8 +23,17 @@ const parseLootType = (line: string): string => {
 	return value.trim()
 }
 
-export const parseLoot = (text: string) => {
-	const [, duration, lootType, loot, supplies, balance, ...lines] = text
+const parsePlayer = ([name, loot, supplies, balance, damage, healing]: string[]) => ({
+	name: name.replace('(Leader)', '').trim(),
+	loot: parseNumberLine(loot),
+	supplies: parseNumberLine(supplies),
+	balance: parseNumberLine(balance),
+	damage: parseNumberLine(damage),
+	healing: parseNumberLine(healing),
+})
+
+export const parseSessionText = (text: string) => {
+	const [sessionHeader, duration, lootType, loot, supplies, balance, ...lines] = text
 		.trim()
 		.split('\n')
 
@@ -23,25 +41,17 @@ export const parseLoot = (text: string) => {
 		throw new Error('Invalid input')
 	}
 
-	// TODO: Fix imports
 	return {
-		duration: parseDuration(duration),
+		sessionId: generateSnowflakeId({ processID: Deno.pid, timestamp: Date.now() }),
+		dates: {
+			startDate: new Date(sessionHeader.split('From ')[1].split('to')[0].split(',').join('T').replace(' ', '').trim()),
+			endDate: new Date(sessionHeader.split('to ')[1].split(',').join('T').replace(' ', '').trim()),
+			durationMinutes: parseDuration(duration),
+		},
 		lootType: parseLootType(lootType),
 		loot: parseNumberLine(loot),
 		supplies: parseNumberLine(supplies),
 		balance: parseNumberLine(balance),
-		players: [
-			...map(
-				chunk(lines, 6),
-				([name, loot, supplies, balance, damage, healing]) => ({
-					name: name.replace('(Leader)', '').trim(),
-					loot: parseNumberLine(loot),
-					supplies: parseNumberLine(supplies),
-					balance: parseNumberLine(balance),
-					damage: parseNumberLine(damage),
-					healing: parseNumberLine(healing),
-				}),
-			),
-		],
+		players: chunk(lines, 6).map(parsePlayer)
 	}
 }

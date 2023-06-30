@@ -90,7 +90,24 @@ export class Balance {
     }
   }
 
+  get fromChar () {
+    return this.transactions[0].from
+  }
+
+  get toChar () {
+    return this.transactions[0].to
+  }
+
+  #formatFromToCharName (type: 'from' | 'to') {
+    switch (type) {
+      case 'from':
+        return this.from !== this.fromChar ? `\\(on ${this.fromChar}\\)` : ''
+      case 'to':
+        return this.to !== this.toChar ? `\\(on ${this.toChar}\\)` : ''
+    }
+  }
+
   toString () {
-    return `\n👉 *${makeUserLink(this.from)}* owes *${makeUserLink(this.to)}* _${Intl.NumberFormat().format(this.#amount)}_:\n\t\t💬: _transfer ${this.#amount} to ${this.transactions[0].to}_`
+    return `\n👉 *${makeUserLink(this.from)} ${this.#formatFromToCharName('from')}* owes *${makeUserLink(this.to)} ${this.#formatFromToCharName('to')}* _${Intl.NumberFormat().format(this.#amount)}_:\n\t\t💬: _transfer ${this.#amount} to ${this.toChar}_`
   }
 }

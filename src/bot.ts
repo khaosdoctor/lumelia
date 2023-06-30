@@ -1,20 +1,30 @@
-import { Bot, Context, session, SessionFlavor } from './deps.ts'
-import { config } from './config.ts'
-import { getStorageAdapter } from './storage.ts'
 import { botCommands } from './commands/index.ts'
-import { clearBalanceHandler } from './handlers/clearBalance.ts'
+import { config } from './config.ts'
+import { HuntSession } from './core/parse-loot.ts'
+import { Transaction } from "./core/split-loot.ts"
+import { Bot, Context, session, SessionFlavor } from './deps.ts'
 import { balancePaidHandler } from "./handlers/balancePaid.ts"
+import { clearBalanceHandler } from './handlers/clearBalance.ts'
+import { getStorageAdapter } from './storage.ts'
+
+export interface TelegramUser {
+  name: string
+  userId: number
+}
 
 export interface BotSession {
-  players: Record<string, { name: string; userId: number }>
+  charsToPlayers: Record<string, TelegramUser>
+  playersToChars: Record<string, string[]>
   balances: Record<string, number>
+  huntSessions: Record<string, HuntSession>
+  transactions: Record<string, Transaction>
 }
 export type BotContext = Context & SessionFlavor<BotSession>
 
 export const bot = new Bot<BotContext>(config.TELEGRAM_BOT_TOKEN)
 
 bot.use(session({
-  initial: () => ({ players: {}, balances: {} }),
+  initial: () => ({ charsToPlayers: {}, playersToChars: {}, balances: {}, huntSessions: {}, transactions: {} }),
   storage: await getStorageAdapter(config),
 }))
 

@@ -30,7 +30,7 @@ export class Balance {
   #transactions: Transaction[] = []
   #history: BalanceHistory[] = []
 
-  static from (balanceObject: BalanceObject) {
+  static createFrom (balanceObject: BalanceObject) {
     const balance = new Balance(balanceObject.from, balanceObject.to, balanceObject.id)
     balance.#amount = balanceObject.amount
     balance.#paid = balanceObject.paid

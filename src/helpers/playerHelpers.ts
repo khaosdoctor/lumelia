@@ -40,9 +40,23 @@ export function getOutstandingBalance (session: BotSession, from: MaybePlayer, t
   if (!foundPlayerBalance) return null
 
   const foundBalance = foundPlayerBalance[receiverKey]
-  if (foundBalance) return Balance.from(foundBalance)
+  if (foundBalance) return Balance.createFrom(foundBalance)
 
   return null
+}
+
+export function getAllPlayerBalances (session: BotSession, from: MaybePlayer) {
+  let payerKey: CharName | PlayerId
+  if (isCharName(from)) payerKey = from
+  else if (isTelegramUser(from)) payerKey = from.userId
+  else {
+    throw new Error(`Invalid payer: ${from}`)
+  }
+
+  const foundPlayerBalance = session.balances[payerKey]
+  if (!foundPlayerBalance) return []
+
+  return Object.values(foundPlayerBalance).map(Balance.createFrom)
 }
 
 export function isCharName (charName: unknown): charName is CharName {

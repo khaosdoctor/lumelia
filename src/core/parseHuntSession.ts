@@ -1,4 +1,4 @@
-import { generateSnowflakeId } from '../deps.ts'
+import { crypto, toHashString } from "../deps.ts"
 
 export type HuntSession = Awaited<ReturnType<typeof parseHuntSession>>
 
@@ -23,6 +23,11 @@ const parseLootType = (line: string): string => {
 	return value.trim()
 }
 
+const generateSessionHash = async (text: string) => {
+	const textBytes = new TextEncoder().encode(text)
+	return toHashString(await crypto.subtle.digest('SHA-256', textBytes), 'hex').substring(0, 12)
+}
+
 const parsePlayer = ([name, loot, supplies, balance, damage, healing]: string[]) => ({
 	name: name.replace('(Leader)', '').trim(),
 	loot: parseNumberLine(loot),
@@ -32,7 +37,7 @@ const parsePlayer = ([name, loot, supplies, balance, damage, healing]: string[])
 	healing: parseNumberLine(healing),
 })
 
-export const parseHuntSession = (text: string) => {
+export const parseHuntSession = async (text: string) => {
 	const [sessionHeader, duration, lootType, loot, supplies, balance, ...lines] = text
 		.trim()
 		.split('\n')
@@ -42,7 +47,7 @@ export const parseHuntSession = (text: string) => {
 	}
 
 	return {
-		sessionId: generateSnowflakeId({ processID: Deno.pid, timestamp: Date.now() }),
+		sessionId: await generateSessionHash(text),
 		dates: {
 			startDate: new Date(sessionHeader.split('From ')[1].split('to')[0].split(',').join('T').replace(' ', '').trim()),
 			endDate: new Date(sessionHeader.split('to ')[1].split(',').join('T').replace(' ', '').trim()),

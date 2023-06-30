@@ -14,13 +14,17 @@ export async function splitLootCommand (ctx: BotContext) {
   try {
     let parsedSession
     try {
-      parsedSession = parseHuntSession(sessionText)
+      parsedSession = await parseHuntSession(sessionText)
     } catch (error) {
       console.error(`Error parsing session data`, { error })
       return ctx.api.editMessageText(ctx.chat?.id!, loadingMessage.message_id!, `⚠️ Error parsing session text, is this a valid session?`)
     }
 
     const { session } = ctx
+    const huntingSession = session.huntSessions[parsedSession.sessionId]
+    if (huntingSession) {
+      return ctx.api.editMessageText(ctx.chat?.id!, loadingMessage.message_id!, `👀 I already parsed this session before`)
+    }
     session.huntSessions[parsedSession.sessionId] = parsedSession
 
     const transactions = splitLoot(parsedSession)

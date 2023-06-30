@@ -1,7 +1,7 @@
 import { botCommands } from './commands/index.ts'
 import { config } from './config.ts'
-import { HuntSession } from './core/parse-loot.ts'
-import { Transaction } from "./core/split-loot.ts"
+import { HuntSession } from './core/parseLoot.ts'
+import { Transaction } from "./core/splitLoot.ts"
 import { Bot, Context, session, SessionFlavor } from './deps.ts'
 import { balancePaidHandler } from "./handlers/balancePaid.ts"
 import { clearBalanceHandler } from './handlers/clearBalance.ts'

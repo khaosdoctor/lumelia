@@ -36,7 +36,7 @@ export async function splitLootCommand(ctx: BotContext) {
 			return ctx.api.editMessageText(
 				ctx.chat?.id!,
 				loadingMessage.message_id!,
-				`👀 I already parsed this session before`,
+				`👀 I already parsed this session before, use the /balances command to show the balance for all players`,
 			)
 		}
 		session.huntSessions[parsedSession.sessionId] = parsedSession

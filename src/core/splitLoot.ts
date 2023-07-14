@@ -53,5 +53,5 @@ export const splitLoot = ({
 		state.sort((a, b) => a.balance - b.balance)
 	}
 
-	return transactions
+	return transactions.sort((a, b) => a.from.localeCompare(b.from, 'us', { sensitivity: 'base' }))
 }

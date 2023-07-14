@@ -3,8 +3,6 @@ import { Filter } from '../deps.ts'
 import { findCharsOwnedByPlayer } from '../helpers/playerHelpers.ts'
 import { userObjectFromMessage } from '../helpers/userObjectFromMessage.ts'
 
-type ClearBalanceResponseTypes = 'Yes' | 'No' | undefined
-
 export async function balancePaidHandler(
 	ctx: Filter<BotContext, 'callback_query'>,
 ) {

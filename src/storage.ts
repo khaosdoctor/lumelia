@@ -1,7 +1,7 @@
 import { FileAdapter } from './deps.ts'
 import type { Config } from './config.ts'
-import { type ISession, MongoClient, MongoDBAdapter } from './deps.ts'
 import type { BotSession } from './bot.ts'
+import { DenoKVAdapter } from './deps.ts'
 
 export async function getStorageAdapter(config: Config) {
 	if (config.DEV_MODE) {
@@ -9,12 +9,6 @@ export async function getStorageAdapter(config: Config) {
 			dirName: '.botdata',
 		})
 	}
-
-	const client = new MongoClient()
-	await client.connect(config.DATABASE_CONNSTRING)
-	const db = client.database('lumelia')
-	const collection = db.collection<ISession>('sessions')
-	return new MongoDBAdapter<BotSession>({
-		collection,
-	})
+	const kv = await Deno.openKv('./kv.db')
+	return new DenoKVAdapter<BotSession>(kv)
 }

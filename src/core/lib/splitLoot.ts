@@ -1,5 +1,5 @@
-import { CharName } from '../bot.ts'
-import { toCharName } from '../helpers/playerHelpers.ts'
+import { toCharName } from '../../types/guards.ts'
+import { CharName } from '../../types/mod.ts'
 import type { HuntSession } from './parseHuntSession.ts'
 
 export interface Transaction {

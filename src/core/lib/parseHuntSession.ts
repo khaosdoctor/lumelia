@@ -1,4 +1,4 @@
-import { crypto, toHashString } from '../deps.ts'
+import { crypto, toHashString } from '../../deps.ts'
 
 export type HuntSession = Awaited<ReturnType<typeof parseHuntSession>>
 

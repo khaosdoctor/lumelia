@@ -1,4 +1,4 @@
-import { InlineKeyboard } from '../../deps.ts'
+import { InlineKeyboard } from '../deps.ts'
 
 export const IPaidButton = (options?: { balanceId?: string; sessionId?: string; all?: boolean }) => {
 	const query = [options?.balanceId || 0, options?.sessionId || 0].join(':')

@@ -66,7 +66,11 @@ export async function splitLootCommand(ctx: BotContext) {
 			)
 		}
 
-		await ctx.deleteMessage()
+		try {
+			await ctx.deleteMessage()
+		} catch (err) {
+			console.error('cannot delete message skipping', { err })
+		}
 
 		return ctx.api.editMessageText(
 			ctx.chat?.id!,

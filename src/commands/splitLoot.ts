@@ -3,6 +3,7 @@ import { Balance } from '../core/Balance.ts'
 import { parseHuntSession } from '../core/parseHuntSession.ts'
 import { splitLoot } from '../core/splitLoot.ts'
 import { IPaidButton } from '../helpers/buttons/IPaidButton.ts'
+import { makeUserLink } from '../helpers/makeUserLink.ts'
 import { findPlayerThatOwnsTheChar, getOutstandingBalance, setPlayerBalance } from '../helpers/playerHelpers.ts'
 
 export async function splitLootCommand(ctx: BotContext) {
@@ -45,7 +46,9 @@ export async function splitLootCommand(ctx: BotContext) {
 		const transactions = splitLoot(parsedSession)
 		if (!session.transactions) session.transactions = {}
 
-		const balanceText = new Map<string, string>()
+		const balanceText = new Set<string>()
+		balanceText.add(`*Session ${parsedSession.sessionId}*`)
+		balanceText.add(`_this balance is only for this session, for a total list of balances use /balances_\n`)
 		for (const transaction of transactions) {
 			session.transactions[transaction.transactionId] = transaction
 			const maybePlayer = findPlayerThatOwnsTheChar(session, transaction.from)
@@ -54,7 +57,13 @@ export async function splitLootCommand(ctx: BotContext) {
 				new Balance(maybePlayer, maybeReceiver)
 			outstandingBalance.addTransaction(transaction)
 			setPlayerBalance(session, outstandingBalance)
-			balanceText.set(outstandingBalance.id, outstandingBalance.toString())
+			balanceText.add(
+				`👉 *${makeUserLink(maybePlayer)} ${outstandingBalance.formatFromToCharName('from')}* owes *${
+					makeUserLink(maybeReceiver)
+				} ${outstandingBalance.formatFromToCharName('to')}* ${
+					Intl.NumberFormat().format(transaction.amount)
+				}:\n\t💬: \`transfer ${transaction.amount} to ${transaction.to}\`\n`,
+			)
 		}
 
 		ctx.deleteMessage()

@@ -9,3 +9,7 @@ export function getAllBalances(session: BotSession) {
 	const balances = Object.values(session.balances).map((playerBalances) => Object.values(playerBalances))
 	return balances.flat().map((balance) => Balance.createFrom(balance))
 }
+
+export function getBalanceBySessionId(session: BotSession, huntSessionId: string) {
+	return getAllBalances(session).filter((balance) => balance.sessionsIncluded.has(huntSessionId))
+}

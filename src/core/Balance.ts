@@ -1,6 +1,7 @@
 import { MaybePlayer } from '../bot.ts'
 import { generateSnowflakeId } from '../deps.ts'
 import { makeUserLink } from '../helpers/makeUserLink.ts'
+import { BalanceOverpayError } from './errors/BalanceOverpay.ts'
 import { Transaction } from './splitLoot.ts'
 
 export type Nullable<T> = T | null
@@ -18,14 +19,15 @@ export interface BalanceObject {
 export interface BalanceHistory {
 	amountPaid: number
 	date: Date
-	transactions: Transaction[]
+	transactions?: Transaction[]
+	notes?: string
 }
 
 export class Balance {
 	readonly id: string
 	from: MaybePlayer
 	to: MaybePlayer
-	#amount = 0
+	amount = 0
 	#paid = false
 	#transactions: Transaction[] = []
 	#history: BalanceHistory[] = []
@@ -36,7 +38,7 @@ export class Balance {
 			balanceObject.to,
 			balanceObject.id,
 		)
-		balance.#amount = balanceObject.amount
+		balance.amount = balanceObject.amount
 		balance.#paid = balanceObject.paid
 		balance.#transactions = balanceObject.transactions
 		balance.#history = balanceObject.history
@@ -49,8 +51,8 @@ export class Balance {
 		this.id = id || generateSnowflakeId({ processID: Deno.pid })
 	}
 
-	get amount() {
-		return this.#amount
+	get sessionsIncluded() {
+		return new Set(this.#transactions.map((transaction) => transaction.sessionId))
 	}
 
 	get isPaid() {
@@ -68,30 +70,66 @@ export class Balance {
 	addTransaction(transaction: Transaction) {
 		this.#transactions.push(transaction)
 		this.#paid = false
-		this.#amount += transaction.amount
+		this.amount += transaction.amount
+		return this
 	}
 
 	markAsPaid() {
 		this.#history.push({
-			amountPaid: this.#amount,
+			amountPaid: this.amount,
 			date: new Date(),
 			transactions: this.#transactions,
+			notes: 'Final Payment',
 		})
-		this.#amount = 0
+		this.amount = 0
 		this.#paid = true
 		this.#transactions = []
+		return this
 	}
 
-	pay(amount: number) {
-		this.#amount -= amount
+	pay(amount: number, transaction?: Transaction) {
+		if (this.isPaid) return
+		if (amount > this.amount) {
+			throw new BalanceOverpayError(amount, this.amount)
+		}
+
+		this.amount -= amount
 		this.history.push({
 			amountPaid: amount,
 			date: new Date(),
-			transactions: [],
+			notes: 'Partial Payment',
+			transactions: transaction ? [transaction] : [],
 		})
-		if (this.#amount <= 0) {
+
+		if (this.amount <= 0) {
 			this.markAsPaid()
 		}
+
+		return this
+	}
+
+	payAll() {
+		this.pay(this.amount)
+		return this
+	}
+
+	payAllFromSession(sessionId: string) {
+		const summary = {
+			transactions: [] as Transaction[],
+			totalAmount: 0,
+			balanceInstance: this,
+		}
+
+		for (const transaction of this.#transactions) {
+			if (transaction.sessionId === sessionId) {
+				this.pay(transaction.amount, transaction)
+				summary.transactions.push(transaction)
+				summary.totalAmount += transaction.amount
+			}
+		}
+
+		this.#transactions = this.#transactions.filter((transaction) => transaction.sessionId !== sessionId)
+		return summary
 	}
 
 	toObject(): BalanceObject {
@@ -99,7 +137,7 @@ export class Balance {
 			id: this.id,
 			from: this.from,
 			to: this.to,
-			amount: this.#amount,
+			amount: this.amount,
 			paid: this.#paid,
 			transactions: this.#transactions,
 			history: this.#history,
@@ -126,6 +164,6 @@ export class Balance {
 	toString() {
 		return `\n👉 *${makeUserLink(this.from)} ${this.#formatFromToCharName('from')}* owes *${makeUserLink(this.to)} ${
 			this.#formatFromToCharName('to')
-		}* _${Intl.NumberFormat().format(this.#amount)}_:\n\t\t💬: _transfer ${this.#amount} to ${this.toChar}_`
+		}* _${Intl.NumberFormat().format(this.amount)}_:\n\t\t💬: _transfer ${this.amount} to ${this.toChar}_`
 	}
 }

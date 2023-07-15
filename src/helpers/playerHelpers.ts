@@ -9,6 +9,12 @@ export function toCharName(id: string): CharName {
 	return String(id) as CharName
 }
 
+export function resolvePlayerId(player: MaybePlayer): CharName | PlayerId {
+	if (isCharName(player)) return player
+	else if (isTelegramUser(player)) return player.userId
+	throw new Error(`Invalid player: ${player}`)
+}
+
 export function setPlayerBalance(session: BotSession, balance: Balance) {
 	const payerKey = isCharName(balance.from) ? balance.from : balance.from.userId
 	const receiverKey = isCharName(balance.to) ? balance.to : balance.to.userId
@@ -30,19 +36,8 @@ export function getOutstandingBalance(
 	from: MaybePlayer,
 	to: MaybePlayer,
 ) {
-	let payerKey: CharName | PlayerId
-	if (isCharName(from)) payerKey = from
-	else if (isTelegramUser(from)) payerKey = from.userId
-	else {
-		throw new Error(`Invalid payer: ${from}`)
-	}
-
-	let receiverKey: CharName | PlayerId
-	if (isCharName(to)) receiverKey = to
-	else if (isTelegramUser(to)) receiverKey = to.userId
-	else {
-		throw new Error(`Invalid receiver: ${to}`)
-	}
+	const payerKey: CharName | PlayerId = resolvePlayerId(from)
+	const receiverKey: CharName | PlayerId = resolvePlayerId(to)
 
 	const foundPlayerBalance = session.balances[payerKey]
 	if (!foundPlayerBalance) return null
@@ -53,14 +48,14 @@ export function getOutstandingBalance(
 	return null
 }
 
-export function getAllPlayerBalances(session: BotSession, from: MaybePlayer) {
-	let payerKey: CharName | PlayerId
-	if (isCharName(from)) payerKey = from
-	else if (isTelegramUser(from)) payerKey = from.userId
-	else {
-		throw new Error(`Invalid payer: ${from}`)
-	}
+export function getRemainingAmountToPayForPlayer(session: BotSession, from: MaybePlayer) {
+	const balances = getAllPlayerBalances(session, from)
+	if (!balances) return 0
+	return balances.reduce((acc, balance) => acc + balance.amount, 0)
+}
 
+export function getAllPlayerBalances(session: BotSession, from: MaybePlayer) {
+	const payerKey: CharName | PlayerId = resolvePlayerId(from)
 	const foundPlayerBalance = session.balances[payerKey]
 	if (!foundPlayerBalance) return []
 

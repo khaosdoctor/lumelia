@@ -56,4 +56,4 @@ for (const { command, handler } of botCommands) {
 }
 
 bot.callbackQuery(/clearBalance(\w*)/, clearBalanceHandler)
-bot.callbackQuery('balance_paid', balancePaidHandler)
+bot.callbackQuery(/balancePaid(.*):(.*)/, balancePaidHandler)

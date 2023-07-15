@@ -3,8 +3,8 @@ import { RepositoryList } from '../core/repositories/mod.ts'
 import { listBalancesCommandFactory } from './balances.ts'
 import { charListCommandFactory } from './charList.ts'
 import { clearBalanceCommandFactory } from './clearBalance.ts'
-import { iamCommandFactory } from './iam.ts'
-import { iamNotCommandFactory } from './iamnot.ts'
+import { iamCommandFactory } from './iAm.ts'
+import { iamNotCommandFactory } from './iAmNot.ts'
 import { infoCommandFactory } from './info.ts'
 import { settleCommandFactory } from './settle.ts'
 import { splitLootCommandFactory } from './splitLoot.ts'
@@ -26,7 +26,7 @@ export const botCommands = async (repositories: RepositoryList) => [
 		handler: await iamNotCommandFactory(repositories),
 	},
 	{
-		command: 'charList',
+		command: 'charlist',
 		description: 'Shows all the users and their characters',
 		handler: await charListCommandFactory(repositories),
 	},

@@ -19,7 +19,7 @@ bot.use(session({
 
 await bot.api.setMyCommands(
 	commands.map(({ command, description }) => ({
-		command: `/${command}`,
+		command: `/${command.toLowerCase()}`,
 		description,
 	})),
 )

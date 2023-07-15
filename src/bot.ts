@@ -28,6 +28,13 @@ export interface BotSession {
 	>
 	huntSessions: Record<HuntSession['sessionId'], HuntSession>
 	transactions: Record<Transaction['transactionId'], Transaction>
+	analytics: {
+		totalPaid: Record<CharName, number>
+		highestProfit: Record<CharName, { sessionId: HuntSession['sessionId'] }>
+		lowestProfit: Record<CharName, number>
+		sessionsRecorded: Record<CharName, number>
+		totalPaidPerPlayer: Record<CharName, Record<CharName, number>>
+	}
 }
 export type BotContext = Context & SessionFlavor<BotSession>
 
@@ -40,6 +47,13 @@ bot.use(session({
 		balances: {},
 		huntSessions: {},
 		transactions: {},
+		analytics: {
+			totalPaid: {},
+			sessionsRecorded: {},
+			totalPaidPerPlayer: {},
+			highestProfit: {},
+			lowestProfit: {},
+		},
 	}),
 	storage: await getStorageAdapter(config),
 }))

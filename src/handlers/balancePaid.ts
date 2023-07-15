@@ -1,4 +1,4 @@
-import { BotContext } from '../bot.ts'
+import { BotContext, TelegramUser } from '../bot.ts'
 import { Filter } from '../deps.ts'
 import { makeUserLink } from '../helpers/makeUserLink.ts'
 import {
@@ -36,8 +36,13 @@ export async function balancePaidHandler(
 	const loadingMessage = await ctx.reply(`${makeUserLink(player)} started a settle up`, { parse_mode: 'MarkdownV2' })
 	// If it has a session ID it means it's a balance from a specific session
 	// from /splitloot
-	if (sessionId) {
-		const summaries = getAllPlayerBalances(ctx.session, player)
+	if (sessionId) return payBalanceForOneSession(ctx, player, sessionId, loadingMessage)
+	if (balanceId) return 'should pay for only a single balance'
+	return 'pay all outstanding balances for player'
+}
+
+function payBalanceForOneSession (ctx: Filter<BotContext, 'callback_query'>, player: TelegramUser, sessionId: string, loadingMessage: Awaited<ReturnType<BotContext['reply']>>) {
+	const summaries = getAllPlayerBalances(ctx.session, player)
 			.map((b) => b.payAllFromSession(sessionId))
 
 		for (const summary of summaries) {
@@ -70,5 +75,4 @@ export async function balancePaidHandler(
 			*Remaining balances for you:* ${getRemainingAmountToPayForPlayer(ctx.session, player)}`,
 			{ parse_mode: 'MarkdownV2' },
 		)
-	}
 }

@@ -6,4 +6,4 @@ export interface TelegramUser {
 	userId: PlayerId
 }
 
-export type MaybePlayer = TelegramUser | CharName
+export type UserOrChar = TelegramUser | CharName

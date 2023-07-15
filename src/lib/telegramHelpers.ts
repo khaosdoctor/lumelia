@@ -1,4 +1,4 @@
-import { TelegramUser } from '../types/index.ts'
+import { TelegramUser } from '../core/entities/Player.ts'
 
 export function makeUserLink(user: TelegramUser | string) {
 	if (typeof user === 'string') return user

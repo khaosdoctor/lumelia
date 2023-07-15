@@ -1,4 +1,4 @@
-import { CharName, MaybePlayer } from '../../types/mod.ts'
+import { CharName, UserOrChar } from '../../types/mod.ts'
 import { generateSnowflakeId } from '../../deps.ts'
 import { makeUserLink } from '../../lib/telegramHelpers.ts'
 import { toCharName } from '../../types/guards.ts'
@@ -9,9 +9,9 @@ export type Nullable<T> = T | null
 
 export interface BalanceObject {
 	id: string
-	from: MaybePlayer
+	from: UserOrChar
 	fromChar: CharName
-	to: MaybePlayer
+	to: UserOrChar
 	toChar: CharName
 	amount: number
 	paid: boolean
@@ -28,9 +28,9 @@ export interface BalanceHistory {
 
 export class Balance {
 	readonly id: string
-	from: MaybePlayer
+	from: UserOrChar
 	fromChar: CharName = toCharName('')
-	to: MaybePlayer
+	to: UserOrChar
 	toChar: CharName = toCharName('')
 	amount = 0
 	#paid = false
@@ -52,7 +52,7 @@ export class Balance {
 		return balance
 	}
 
-	constructor(from: MaybePlayer, to: MaybePlayer, id?: string) {
+	constructor(from: UserOrChar, to: UserOrChar, id?: string) {
 		this.from = from
 		this.to = to
 		this.id = id || generateSnowflakeId({ processID: Deno.pid })

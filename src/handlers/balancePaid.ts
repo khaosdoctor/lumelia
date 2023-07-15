@@ -5,7 +5,7 @@ import {
 	findCharsOwnedByPlayer,
 	getAllPlayerBalances,
 	getRemainingAmountToPayForPlayer,
-	setPlayerBalance
+	setPlayerBalance,
 } from '../helpers/playerHelpers.ts'
 import { userObjectFromMessage } from '../helpers/userObjectFromMessage.ts'
 
@@ -42,7 +42,7 @@ export async function balancePaidHandler(
 	return 'pay all outstanding balances for player'
 }
 
-function payBalanceForOneSession (
+function payBalanceForOneSession(
 	ctx: Filter<BotContext, 'callback_query'>,
 	player: TelegramUser,
 	sessionId: string,
@@ -69,16 +69,18 @@ function payBalanceForOneSession (
 		loadingMessage.message_id!,
 		`👍 ${makeUserLink(player)} paid all from session:
 
-			*Total Paid:* ${Intl.NumberFormat().format(totalPaid)}
-			*Details:*
-			${
-		summaries.map(({ transactions }) => {
-			return transactions.map((t) => `👉 *${t.from}* ➡️ *${t.to}*: ${Intl.NumberFormat().format(t.amount)}`).join(
-				'\n',
-			)
-		}).join('\n')
+*🏦 Total Paid:* ${Intl.NumberFormat().format(totalPaid)}
+*📈 Details:*
+${
+			summaries.map(({ transactions }) => {
+				return transactions.map((t) => `👉 *${t.from}* ➡️ *${t.to}*: ${Intl.NumberFormat().format(t.amount)}`).join(
+					'\n',
+				)
+			}).join('\n')
 		}\n
-			*Remaining balances for you:* ${getRemainingAmountToPayForPlayer(ctx.session, player)}`,
+			*🤑 Remaining balances for you:* ${
+			Intl.NumberFormat().format(getRemainingAmountToPayForPlayer(ctx.session, player))
+		}`,
 		{ parse_mode: 'MarkdownV2' },
 	)
 }

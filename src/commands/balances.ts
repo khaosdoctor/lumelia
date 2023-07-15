@@ -9,8 +9,8 @@ export async function listBalancesCommand(ctx: BotContext) {
 
 	if (balances.length > 0) {
 		balancesText = getAllBalanceTexts(ctx.session).join('\n')
+		options.reply_markup = IPaidButton()
 	}
 
-	options.reply_markup = IPaidButton()
 	await ctx.reply(`📝 *BALANCE LIST* \n\n ${balancesText}`, options)
 }

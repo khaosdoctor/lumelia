@@ -2,7 +2,7 @@ import { BotContext } from '../bot.ts'
 import { Balance } from '../core/Balance.ts'
 import { parseHuntSession } from '../core/parseHuntSession.ts'
 import { splitLoot } from '../core/splitLoot.ts'
-import { IPaidButton } from "../helpers/buttons/IPaidButton.ts"
+import { IPaidButton } from '../helpers/buttons/IPaidButton.ts'
 import { findPlayerThatOwnsTheChar, getOutstandingBalance, setPlayerBalance } from '../helpers/playerHelpers.ts'
 
 export async function splitLootCommand(ctx: BotContext) {

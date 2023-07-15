@@ -58,7 +58,7 @@ bot.use(session({
 	storage: await getStorageAdapter(config),
 }))
 
-bot.api.setMyCommands(
+await bot.api.setMyCommands(
 	botCommands.map(({ command, description }) => ({
 		command: `/${command}`,
 		description,

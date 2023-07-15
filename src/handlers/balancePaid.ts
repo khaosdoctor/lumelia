@@ -42,7 +42,7 @@ export async function balancePaidHandler(
 	return 'pay all outstanding balances for player'
 }
 
-function payBalanceForOneSession(
+async function payBalanceForOneSession(
 	ctx: Filter<BotContext, 'callback_query'>,
 	player: TelegramUser,
 	sessionId: string,
@@ -58,13 +58,13 @@ function payBalanceForOneSession(
 	const totalPaid = summaries.reduce((acc, b) => acc + b.totalAmount, 0)
 
 	if (totalPaid === 0) {
-		ctx.api.deleteMessage(ctx.chat?.id!, loadingMessage.message_id!)
+		await ctx.api.deleteMessage(ctx.chat?.id!, loadingMessage.message_id!)
 		return ctx.answerCallbackQuery(
 			`✅ You don't have anything else to pay`,
 		)
 	}
 
-	ctx.api.editMessageText(
+	await ctx.api.editMessageText(
 		ctx.chat?.id!,
 		loadingMessage.message_id!,
 		`👍 ${makeUserLink(player)} paid all from session:

@@ -1,8 +1,6 @@
-import { InlineKeyboard } from '../deps.ts'
 import { BotContext } from '../bot.ts'
 import { getAllBalances, getAllBalanceTexts } from '../helpers/balanceHelpers.ts'
-import { isPlayerLinkedToAnyChar } from '../helpers/playerHelpers.ts'
-import { userObjectFromMessage } from '../helpers/userObjectFromMessage.ts'
+import { IPaidButton } from '../helpers/buttons/IPaidButton.ts'
 
 export async function listBalancesCommand(ctx: BotContext) {
 	const balances = getAllBalances(ctx.session)
@@ -12,11 +10,7 @@ export async function listBalancesCommand(ctx: BotContext) {
 	if (balances.length > 0) {
 		balancesText = getAllBalanceTexts(ctx.session).join('\n')
 	}
-	if (isPlayerLinkedToAnyChar(ctx.session, userObjectFromMessage(ctx))) {
-		options.reply_markup = (new InlineKeyboard()).text(
-			'👍 I paid',
-			'balance_paid',
-		)
-	}
+
+	options.reply_markup = IPaidButton()
 	await ctx.reply(`📝 *BALANCE LIST* \n\n ${balancesText}`, options)
 }

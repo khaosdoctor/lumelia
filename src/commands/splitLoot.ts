@@ -2,6 +2,7 @@ import { BotContext } from '../bot.ts'
 import { Balance } from '../core/Balance.ts'
 import { parseHuntSession } from '../core/parseHuntSession.ts'
 import { splitLoot } from '../core/splitLoot.ts'
+import { IPaidButton } from "../helpers/buttons/IPaidButton.ts"
 import { findPlayerThatOwnsTheChar, getOutstandingBalance, setPlayerBalance } from '../helpers/playerHelpers.ts'
 
 export async function splitLootCommand(ctx: BotContext) {
@@ -54,7 +55,6 @@ export async function splitLootCommand(ctx: BotContext) {
 			outstandingBalance.addTransaction(transaction)
 			setPlayerBalance(session, outstandingBalance)
 			balanceText.set(outstandingBalance.id, outstandingBalance.toString())
-			continue
 		}
 
 		ctx.deleteMessage()
@@ -64,6 +64,7 @@ export async function splitLootCommand(ctx: BotContext) {
 			Array.from(balanceText.values()).join('\n'),
 			{
 				parse_mode: 'MarkdownV2',
+				reply_markup: IPaidButton({ sessionId: parsedSession.sessionId, all: true }),
 			},
 		)
 	} catch (error) {

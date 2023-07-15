@@ -34,12 +34,16 @@ export async function balancePaidHandler(
 		return
 	}
 
-	const loadingMessage = await ctx.reply(`${makeUserLink(player)} started a settle up`, { parse_mode: 'MarkdownV2' })
-	// If it has a session ID it means it's a balance from a specific session
-	// from /splitloot
-	if (sessionId) return payBalanceForOneSession(ctx, player, sessionId, loadingMessage)
-	if (balanceId) return 'should pay for only a single balance'
-	return 'pay all outstanding balances for player'
+	try {
+		const loadingMessage = await ctx.reply(`${makeUserLink(player)} started a settle up`, { parse_mode: 'MarkdownV2' })
+		// If it has a session ID it means it's a balance from a specific session
+		// from /splitloot
+		if (sessionId) return payBalanceForOneSession(ctx, player, sessionId, loadingMessage)
+		if (balanceId) return 'should pay for only a single balance'
+		return 'pay all outstanding balances for player'
+	} catch (err) {
+		console.error(err)
+	}
 }
 
 async function payBalanceForOneSession(

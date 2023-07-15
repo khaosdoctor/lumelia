@@ -1,4 +1,4 @@
-import type { CharName, PlayerId, TelegramUser } from './index.ts'
+import { CharName, PlayerId, TelegramUser } from '../core/entities/Player.ts'
 
 export function isCharName(charName: unknown): charName is CharName {
 	return typeof charName === 'string'

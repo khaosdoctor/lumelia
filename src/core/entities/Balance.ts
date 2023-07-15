@@ -1,22 +1,19 @@
-import { CharName, UserOrChar } from '../../types/mod.ts'
 import { generateSnowflakeId } from '../../deps.ts'
 import { makeUserLink } from '../../lib/telegramHelpers.ts'
 import { toCharName } from '../../types/guards.ts'
 import { BalanceOverpayError } from '../errors/BalanceOverpay.ts'
-import { Transaction } from '../lib/splitLoot.ts'
+import { CharName, UserOrChar } from './Player.ts'
 
-export type Nullable<T> = T | null
+export type BalanceObject = ReturnType<Balance['toObject']>
 
-export interface BalanceObject {
-	id: string
-	from: UserOrChar
-	fromChar: CharName
-	to: UserOrChar
-	toChar: CharName
+export interface Transaction {
+	transactionId: string
+	sessionId: string
+	from: CharName
+	to: CharName
 	amount: number
-	paid: boolean
-	transactions: Transaction[]
-	history: BalanceHistory[]
+	note?: string
+	timestamp: number
 }
 
 export interface BalanceHistory {
@@ -139,7 +136,7 @@ export class Balance {
 		return summary
 	}
 
-	toObject(): BalanceObject {
+	toObject() {
 		return {
 			id: this.id,
 			from: this.from,

@@ -1,16 +1,6 @@
 import { toCharName } from '../../types/guards.ts'
-import { CharName } from '../../types/mod.ts'
+import { Transaction } from '../entities/Balance.ts'
 import type { HuntSession } from './parseHuntSession.ts'
-
-export interface Transaction {
-	transactionId: string
-	sessionId: string
-	from: CharName
-	to: CharName
-	amount: number
-	note?: string
-	timestamp: number
-}
 
 /**
  * Split loot between players fairly and return a list of transactions.

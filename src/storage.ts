@@ -9,6 +9,6 @@ export async function getStorageAdapter(config: Config) {
 			dirName: '.botdata',
 		})
 	}
-	const kv = await Deno.openKv('./kv.db')
+	const kv = await Deno.openKv()
 	return new DenoKVAdapter<BotSession>(kv)
 }

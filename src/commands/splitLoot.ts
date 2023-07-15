@@ -66,7 +66,12 @@ export async function splitLootCommand(ctx: BotContext) {
 			)
 		}
 
-		await ctx.deleteMessage()
+		try {
+			await ctx.deleteMessage()
+		} catch (err) {
+			console.log(`Error deleting message`, { err })
+		}
+
 		return ctx.api.editMessageText(
 			ctx.chat?.id!,
 			loadingMessage.message_id!,

@@ -8,7 +8,8 @@
 		}
 	},
 	"tasks": {
-		"dev": "deno run --unstable --watch -A ./src/dev.ts"
+		"run": "deno run --unstable --watch -A ./src/dev.ts",
+		"format": "deno fmt ./src --watch"
 	},
 	"lock": true
 }

@@ -1,6 +1,7 @@
-import { MaybePlayer } from '../bot.ts'
+import { CharName, MaybePlayer } from '../bot.ts'
 import { generateSnowflakeId } from '../deps.ts'
 import { makeUserLink } from '../helpers/makeUserLink.ts'
+import { toCharName } from '../helpers/playerHelpers.ts'
 import { BalanceOverpayError } from './errors/BalanceOverpay.ts'
 import { Transaction } from './splitLoot.ts'
 
@@ -9,7 +10,9 @@ export type Nullable<T> = T | null
 export interface BalanceObject {
 	id: string
 	from: MaybePlayer
+	fromChar: CharName
 	to: MaybePlayer
+	toChar: CharName
 	amount: number
 	paid: boolean
 	transactions: Transaction[]
@@ -26,7 +29,9 @@ export interface BalanceHistory {
 export class Balance {
 	readonly id: string
 	from: MaybePlayer
+	fromChar: CharName = toCharName('')
 	to: MaybePlayer
+	toChar: CharName = toCharName('')
 	amount = 0
 	#paid = false
 	#transactions: Transaction[] = []
@@ -42,6 +47,8 @@ export class Balance {
 		balance.#paid = balanceObject.paid
 		balance.#transactions = balanceObject.transactions
 		balance.#history = balanceObject.history
+		balance.fromChar = balanceObject.fromChar || balanceObject.transactions[0].from
+		balance.toChar = balanceObject.toChar || balanceObject.transactions[0].to
 		return balance
 	}
 
@@ -136,20 +143,14 @@ export class Balance {
 		return {
 			id: this.id,
 			from: this.from,
+			fromChar: this.fromChar,
 			to: this.to,
+			toChar: this.toChar,
 			amount: this.amount,
 			paid: this.#paid,
 			transactions: this.#transactions,
 			history: this.#history,
 		}
-	}
-
-	get fromChar() {
-		return this.transactions[0].from
-	}
-
-	get toChar() {
-		return this.transactions[0].to
 	}
 
 	formatFromToCharName(type: 'from' | 'to') {
@@ -162,6 +163,7 @@ export class Balance {
 	}
 
 	toString() {
+		console.log(this)
 		return `\n👉 *${makeUserLink(this.from)} ${this.formatFromToCharName('from')}* owes *${makeUserLink(this.to)} ${
 			this.formatFromToCharName('to')
 		}* _${Intl.NumberFormat().format(this.amount)}_:\n\t\t💬: _\`transfer ${this.amount} to ${this.toChar}\`_`

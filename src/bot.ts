@@ -71,3 +71,7 @@ for (const { command, handler } of botCommands) {
 
 bot.callbackQuery(/clearBalance(\w*)/, clearBalanceHandler)
 bot.callbackQuery(/balancePaid(.*):(.*)/, balancePaidHandler)
+bot.errorBoundary((err, next) => {
+	console.error(`Error handling update`, err)
+	return next()
+})

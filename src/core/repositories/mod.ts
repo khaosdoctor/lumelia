@@ -4,10 +4,6 @@ import { AnalyticsRepository } from './AnalyticsRepository.ts'
 import { PlayerRepository } from './PlayerRepository.ts'
 import { BalanceRepository } from './BalanceRepository.ts'
 import { DenoKVAdapter } from './../../deps.ts'
-
-export abstract class BaseRepository {
-	constructor(protected readonly db: Deno.Kv) {}
-}
 export type RepositoryList = Awaited<ReturnType<typeof createRepositories>>
 
 export async function getDB(config: Config) {

@@ -6,15 +6,10 @@ import { IPaidButton } from '../helpers/buttons/IPaidButton.ts'
 import { makeUserLink } from '../helpers/makeUserLink.ts'
 import { findPlayerThatOwnsTheChar, getOutstandingBalance, setPlayerBalance } from '../helpers/playerHelpers.ts'
 
-export async function splitLootCommand(ctx: BotContext) {
-	const loadingMessage = await ctx.reply(
-		'Splitting loot... One moment please 🤖',
-	)
+export async function splitLootCommand (ctx: BotContext) {
 	const sessionText = ctx.message?.text?.split('/splitloot')[1]
 	if (!sessionText) {
-		return ctx.api.editMessageText(
-			ctx.chat?.id!,
-			loadingMessage.message_id!,
+		return ctx.reply(
 			'No session text provided, please send the session text after the command 😊',
 		)
 	}
@@ -25,9 +20,7 @@ export async function splitLootCommand(ctx: BotContext) {
 			parsedSession = await parseHuntSession(sessionText)
 		} catch (error) {
 			console.error(`Error parsing session data`, { error })
-			return ctx.api.editMessageText(
-				ctx.chat?.id!,
-				loadingMessage.message_id!,
+			return ctx.reply(
 				`⚠️ Error parsing session text, is this a valid session?`,
 			)
 		}
@@ -35,9 +28,7 @@ export async function splitLootCommand(ctx: BotContext) {
 		const { session } = ctx
 		const huntingSession = session.huntSessions[parsedSession.sessionId]
 		if (huntingSession) {
-			return ctx.api.editMessageText(
-				ctx.chat?.id!,
-				loadingMessage.message_id!,
+			return ctx.reply(
 				`👀 I already parsed this session before, use the /balances command to show the balance for all players`,
 			)
 		}
@@ -72,9 +63,7 @@ export async function splitLootCommand(ctx: BotContext) {
 			console.error('cannot delete message skipping', { err })
 		}
 
-		return ctx.api.editMessageText(
-			ctx.chat?.id!,
-			loadingMessage.message_id!,
+		return ctx.reply(
 			Array.from(balanceText.values()).join('\n'),
 			{
 				parse_mode: 'MarkdownV2',
@@ -83,9 +72,7 @@ export async function splitLootCommand(ctx: BotContext) {
 		)
 	} catch (error) {
 		console.error(`Error splitting loot`, { error })
-		return ctx.api.editMessageText(
-			ctx.chat?.id!,
-			loadingMessage.message_id!,
+		return ctx.reply(
 			`😞 Error splitting loot, please try again later`,
 		)
 	}

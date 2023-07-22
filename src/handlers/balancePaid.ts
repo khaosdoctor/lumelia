@@ -35,10 +35,10 @@ export async function balancePaidHandler(
 	}
 
 	try {
-		const loadingMessage = await ctx.reply(`${makeUserLink(player)} started a settle up`, { parse_mode: 'MarkdownV2' })
+		await ctx.reply(`${makeUserLink(player)} started a settle up`, { parse_mode: 'MarkdownV2' })
 		// If it has a session ID it means it's a balance from a specific session
 		// from /splitloot
-		if (sessionId) return payBalanceForOneSession(ctx, player, sessionId, loadingMessage)
+		if (sessionId) return payBalanceForOneSession(ctx, player, sessionId)
 		if (balanceId) return 'should pay for only a single balance'
 		return 'pay all outstanding balances for player'
 	} catch (err) {
@@ -50,7 +50,6 @@ async function payBalanceForOneSession(
 	ctx: Filter<BotContext, 'callback_query'>,
 	player: TelegramUser,
 	sessionId: string,
-	loadingMessage: Awaited<ReturnType<BotContext['reply']>>,
 ) {
 	const summaries = getAllPlayerBalances(ctx.session, player)
 		.map((b) => b.payAllFromSession(sessionId))
@@ -62,15 +61,12 @@ async function payBalanceForOneSession(
 	const totalPaid = summaries.reduce((acc, b) => acc + b.totalAmount, 0)
 
 	if (totalPaid === 0) {
-		await ctx.api.deleteMessage(ctx.chat?.id!, loadingMessage.message_id!)
 		return ctx.answerCallbackQuery(
 			`✅ You don't have anything else to pay`,
 		)
 	}
 
-	await ctx.api.editMessageText(
-		ctx.chat?.id!,
-		loadingMessage.message_id!,
+	await ctx.reply(
 		`👍 ${makeUserLink(player)} paid all from session:
 
 *🏦 Total Paid:* ${Intl.NumberFormat().format(totalPaid)}
